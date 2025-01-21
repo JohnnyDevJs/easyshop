@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo 'Running commitlint...'
+
+# Detectar o gerenciador de pacotes disponível
+if command -v bun &>/dev/null; then
+  PACKAGE_MANAGER="bunx"
+elif command -v yarn &>/dev/null; then
+  PACKAGE_MANAGER="yarn run"
+elif command -v npx &>/dev/null; then
+  PACKAGE_MANAGER="npx --no"
+else
+  echo "No package manager (bun, yarn, npx) found. Please install one to continue."
+  exit 1
+fi
+
+# Executar commitlint
+$PACKAGE_MANAGER commitlint --edit "${1}" ||
+  (echo 'Commitlint failed. Please fix the commit message.' && exit 1)
+
+echo 'Done'

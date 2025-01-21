@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo 'Check for linting errors...'
+
+if command -v bun &>/dev/null; then
+  PACKAGE_MANAGER="bun"
+elif command -v yarn &>/dev/null; then
+  PACKAGE_MANAGER="yarn"
+elif command -v npm &>/dev/null; then
+  PACKAGE_MANAGER="npm run"
+else
+  echo "No package manager (bun, yarn, npm) found. Please install one to continue."
+  exit 1
+fi
+
+$PACKAGE_MANAGER lint ||
+  (echo 'Linting errors or tests failed. Please fix them before committing.' && exit 1)
+
+echo 'Done'
