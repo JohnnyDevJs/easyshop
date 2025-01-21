@@ -16,7 +16,6 @@ const compat = new FlatCompat({
 })
 
 /** @type {import('eslint').Linter.Config[]} */
-// eslint-disable-next-line import/no-anonymous-default-export
 export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { languageOptions: { globals: globals.browser } },
@@ -34,6 +33,7 @@ export default [
       'simple-import-sort/exports': 'error',
       'react/react-in-jsx-scope': 'off',
       'import/no-anonymous-default-export': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 ]
