@@ -4,6 +4,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string(),
   NEXT_PUBLIC_APP_DESCRIPTION: z.string(),
   NEXT_PUBLIC_SERVER_URL: z.string().url(),
+  DATABASE_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)
