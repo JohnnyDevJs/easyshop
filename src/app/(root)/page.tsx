@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function HomePage() {
-  return <ProductList data={sampleData.products} title="Novidades" limit={2} />
+  return <ProductList data={sampleData.products} title="Novidades" limit={4} />
 }
