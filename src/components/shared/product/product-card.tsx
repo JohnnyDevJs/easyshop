@@ -3,6 +3,8 @@ import Link from 'next/link'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
+import { ProductPrice } from './product-price'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type ProductCardProps = {
   product: any
@@ -30,7 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex-between gap-4">
           <p>{product.rating}</p>
           {product.stock > 0 ? (
-            <p className="font-bold">{product.price}</p>
+            <ProductPrice value={Number(product.price)} />
           ) : (
             <p className="text-destructive">Esgotado</p>
           )}
