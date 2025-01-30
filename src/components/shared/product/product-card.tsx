@@ -2,17 +2,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { ProductProps } from '@/types'
 
 import { ProductPrice } from './product-price'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type ProductCardProps = {
-  product: any
+  product: ProductProps
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm overflow-hidden">
       <CardHeader className="items-center p-0">
         <Link href={`/product/${product.slug}`}>
           <Image
