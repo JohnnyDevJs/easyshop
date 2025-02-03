@@ -37,7 +37,7 @@ export default async function ProductDetailPage({
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ProductPrice
                   value={Number(product.price)}
-                  className="bg-store w-24 rounded-full px-5 py-2 text-white"
+                  className="w-24 rounded-full bg-store px-5 py-2 text-white"
                 />
               </div>
             </div>

@@ -27,7 +27,7 @@ export function ProductImages({ images }: ProductImagesProps) {
             key={image}
             onClick={() => setCurrent(index)}
             className={cn(
-              'hover:border-store mr-2 cursor-pointer overflow-hidden rounded-xl border',
+              'mr-2 cursor-pointer overflow-hidden rounded-xl border hover:border-store',
               current === index && 'border-store',
             )}
           >
