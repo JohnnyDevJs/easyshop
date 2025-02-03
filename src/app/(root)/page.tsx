@@ -8,5 +8,5 @@ export const metadata = {
 export default async function HomePage() {
   const latestProduct = await getLatestProducts()
 
-  return <ProductList data={latestProduct} title="Novidades" />
+  return <ProductList data={latestProduct} title="Novidades" limit={6} />
 }

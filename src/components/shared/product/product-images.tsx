@@ -19,7 +19,7 @@ export function ProductImages({ images }: ProductImagesProps) {
         alt="Imagem do produto"
         width={1000}
         height={1000}
-        className="min-h=[300px] object-cover object-center"
+        className="min-h=[300px] rounded-xl border object-cover object-center"
       />
       <div className="flex">
         {images.map((image, index) => (
@@ -27,8 +27,8 @@ export function ProductImages({ images }: ProductImagesProps) {
             key={image}
             onClick={() => setCurrent(index)}
             className={cn(
-              'mr-2 cursor-pointer border hover:border-orange-600',
-              current === index && 'border-orange-500',
+              'hover:border-store mr-2 cursor-pointer overflow-hidden rounded-xl border',
+              current === index && 'border-store',
             )}
           >
             <Image src={image} alt="Imagem" width={100} height={100} />
