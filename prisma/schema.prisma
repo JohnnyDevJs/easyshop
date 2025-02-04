@@ -23,7 +23,65 @@ model Product {
   isFeatured  Boolean  @map("is_featured")
   banner      String?
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("products")
+}
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String    @default("NO_NAME")
+  email         String    @unique(map: "user_email_idx")
+  password      String?
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  role          String    @default("user")
+  address       Json?     @db.Json
+  paymentMethod String?   @map("payment_method")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  account       Account[]
+  session       Session[]
+
+  @@map("users")
+}
+
+model Account {
+  userId            String   @map("user_id") @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String   @map("provider_account_id")
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @id @map("session_token")
+  userId       String   @map("user_id") @db.Uuid
+  expires      DateTime @db.Timestamp(6)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
