@@ -23,3 +23,13 @@ export const insertProductSchema = z.object({
   banner: z.string().nullable(),
   price: currency,
 })
+
+export const signInFormSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: 'Digite um endereço de e-mail.' })
+    .email('Endereço de e-mail inválido.'),
+  password: z
+    .string()
+    .min(1, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
+})
