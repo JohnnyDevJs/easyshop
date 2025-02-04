@@ -1,4 +1,21 @@
+import { Role } from '@prisma/client'
+import { hashSync } from 'bcrypt-ts-edge'
+
 export const sampleData = {
+  users: [
+    {
+      name: 'John Doe',
+      email: 'admin@example.com',
+      password: hashSync('123456', 10),
+      role: Role.ADMIN,
+    },
+    {
+      name: 'Jane Doe',
+      email: 'user@example.com',
+      password: hashSync('123456', 10),
+      role: Role.USER,
+    },
+  ],
   products: [
     {
       name: 'Polo Sporting Stretch Shirt',
