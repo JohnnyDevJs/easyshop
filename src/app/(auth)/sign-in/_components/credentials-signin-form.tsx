@@ -1,15 +1,39 @@
 'use client'
 
 import Link from 'next/link'
+import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 
+import Spinner from '@/assets/images/spinner.svg'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signInDefaultValues } from '@/config/auth-config'
+import { signInWithCredentials } from '@/lib/actions/user.actions'
 
 export function CredentialsSignInForm() {
+  const [data, action] = useActionState(signInWithCredentials, {
+    success: false,
+    message: '',
+  })
+
+  const SignInButton = () => {
+    const { pending } = useFormStatus()
+
+    return (
+      <Button disabled={pending} className="w-full" variant="default">
+        {pending ? (
+          <span className="[&>svg]:animate-spin [&>svg]:duration-300">
+            <Spinner />
+          </span>
+        ) : (
+          'Login'
+        )}
+      </Button>
+    )
+  }
   return (
-    <form>
+    <form action={action}>
       <div className="space-y-6">
         <div>
           <Label htmlFor="email">E-mail</Label>
@@ -32,10 +56,13 @@ export function CredentialsSignInForm() {
           />
         </div>
         <div>
-          <Button className="w-full" variant="default">
-            Login
-          </Button>
+          <SignInButton />
         </div>
+
+        {data && !data.success && (
+          <div className="text-center text-destructive">{data.message}</div>
+        )}
+
         <div className="text-center text-sm text-muted-foreground">
           Não tem uma conta?{' '}
           <Link href="/sign-up" target="_self" className="link text-store">

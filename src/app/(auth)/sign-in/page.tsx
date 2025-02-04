@@ -1,7 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 import Logo from '@/assets/images/logo.svg'
+import { auth } from '@/auth'
 import {
   Card,
   CardContent,
@@ -16,7 +18,11 @@ export const metadata: Metadata = {
   title: 'Sign In',
 }
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  const session = await auth()
+
+  if (session) return redirect('/')
+
   return (
     <div className="mx-auto w-full max-w-md">
       <Card>
