@@ -1,29 +1,47 @@
 'use server'
 
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
+import { AuthError } from 'next-auth'
+import { z } from 'zod'
 
 import { signIn, signOut } from '@/auth'
+import { getUserByEmail } from '@/lib/queries/users'
 import { signInFormSchema } from '@/lib/validators'
 
-export async function signInWithCredentials(
-  prevState: unknown,
-  formData: FormData,
-) {
+export type SignInFormFields = z.infer<typeof signInFormSchema>
+
+export async function signInWithCredentials(formData: SignInFormFields) {
+  const validatedFields = signInFormSchema.safeParse(formData)
+
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields.' }
+  }
+
+  const { email, password } = validatedFields.data
+  const existingUser = await getUserByEmail(email)
+
+  if (!existingUser || !existingUser.email) {
+    return { error: 'Este e-mail não está cadastrado.' }
+  }
+
   try {
-    const user = signInFormSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password'),
+    await signIn('credentials', {
+      email,
+      password,
     })
-
-    await signIn('credentials', user)
-
-    return { success: true, message: 'Signed in successfully.' }
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error
-    }
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return {
+            error: 'Credenciais inválidas.',
+          }
 
-    return { success: false, message: 'Invalid email or password.' }
+        default:
+          return {
+            error: 'Algo deu errado.',
+          }
+      }
+    }
   }
 }
 

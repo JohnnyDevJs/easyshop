@@ -27,9 +27,8 @@ export const insertProductSchema = z.object({
 export const signInFormSchema = z.object({
   email: z
     .string()
-    .min(1, { message: 'Digite um endereço de e-mail.' })
-    .email('Endereço de e-mail inválido.'),
-  password: z
-    .string()
-    .min(1, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
+    .min(1, { message: 'Informe seu e-mail.' })
+    .email('Digite um e-mail válido.')
+    .trim(),
+  password: z.string().min(1, { message: 'A senha é obrigatória.' }),
 })

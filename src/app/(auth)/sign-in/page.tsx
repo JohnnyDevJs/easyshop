@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-import { CredentialsSignInForm } from './_components/credentials-signin-form'
+import { SignInForm } from './_components/signin-form'
 
 export const metadata: Metadata = {
   title: 'Sign In',
@@ -43,7 +43,7 @@ export default async function SignInPage({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <CredentialsSignInForm />
+          <SignInForm />
         </CardContent>
       </Card>
     </div>
