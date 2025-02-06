@@ -13,4 +13,6 @@ export type ProductProps = z.infer<typeof insertProductSchema> & {
 }
 
 export type CartProps = z.infer<typeof insertCartSchema>
-export type CartItemProps = z.infer<typeof cartItemSchema>
+export type CartItemProps = {
+  item: z.infer<typeof cartItemSchema>
+}
