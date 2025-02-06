@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { signInDefaultValues } from '@/config/auth-config'
 import { signInWithCredentials } from '@/lib/actions/user.actions'
 import { signInFormSchema } from '@/lib/validators'
 
@@ -28,9 +27,17 @@ type SignInFormData = z.infer<typeof signInFormSchema>
 export function SignInForm() {
   const router = useRouter()
 
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const emailFromParams = searchParams.get('email') || ''
+
+  const signInValuesFromParams = {
+    email: emailFromParams,
+  }
+
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInFormSchema),
-    defaultValues: signInDefaultValues,
+    defaultValues: signInValuesFromParams,
   })
 
   const {
@@ -38,9 +45,6 @@ export function SignInForm() {
     control,
     formState: { isSubmitting },
   } = signInForm
-
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
 
   async function handleSignIn(data: SignInFormData) {
     try {
@@ -70,7 +74,11 @@ export function SignInForm() {
               <FormItem>
                 <FormLabel>E-mail</FormLabel>
                 <FormControl>
-                  <Input placeholder="Digite seu e-mail" {...field} autoFocus />
+                  <Input
+                    placeholder="Digite seu e-mail"
+                    {...field}
+                    autoFocus={!emailFromParams}
+                  />
                 </FormControl>
                 <FormDescription />
                 <FormMessage />
@@ -88,6 +96,7 @@ export function SignInForm() {
                     type="password"
                     placeholder="Digite sua senha"
                     {...field}
+                    autoFocus={!!emailFromParams}
                   />
                 </FormControl>
                 <FormDescription />
@@ -109,7 +118,7 @@ export function SignInForm() {
           <div className="text-center text-sm text-muted-foreground">
             Não tem uma conta?{' '}
             <Link href="/sign-up" target="_self" className="link text-store">
-              Cadastrar
+              Inscreva-se
             </Link>
           </div>
         </div>

@@ -32,3 +32,26 @@ export const signInFormSchema = z.object({
     .trim(),
   password: z.string().min(1, { message: 'A senha é obrigatória.' }),
 })
+
+export const signUpFormSchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, { message: 'Informe seu nome completo.' })
+      .refine((name) => name.trim().split(/\s+/).length > 1, {
+        message: 'Informe pelo menos um nome e um sobrenome.',
+      }),
+    email: z
+      .string()
+      .min(1, { message: 'Informe seu e-mail.' })
+      .email('Digite um e-mail válido.')
+      .trim(),
+    password: z
+      .string()
+      .min(6, { message: 'A senha precisa ter pelo menos 6 caracteres.' }),
+    confirmPassword: z.string().min(1, { message: 'Confirme sua senha.' }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não correspondem.',
+    path: ['confirmPassword'],
+  })
