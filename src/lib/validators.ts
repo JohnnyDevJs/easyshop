@@ -9,6 +9,7 @@ const currency = z
     'O preço deve ter exatamente casas decimais',
   )
 
+// Schema for inserting products
 export const insertProductSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   slug: z.string().min(1, 'O slug é obrigatório.'),
@@ -24,6 +25,7 @@ export const insertProductSchema = z.object({
   price: currency,
 })
 
+// Schema for signing users in
 export const signInFormSchema = z.object({
   email: z
     .string()
@@ -33,6 +35,7 @@ export const signInFormSchema = z.object({
   password: z.string().min(1, { message: 'A senha é obrigatória.' }),
 })
 
+// Schema for signing up a user
 export const signUpFormSchema = z
   .object({
     name: z
@@ -55,3 +58,26 @@ export const signUpFormSchema = z
     message: 'As senhas não correspondem.',
     path: ['confirmPassword'],
   })
+
+// Cart Schemas
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, 'O produto é obrigatório.'),
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  slug: z.string().min(1, 'O slug é obrigatório.'),
+  qty: z
+    .number()
+    .int()
+    .nonnegative('A quantidade deve ser um número positivo.'),
+  image: z.string().min(1, 'A imagem é obrigatória.'),
+  price: currency,
+})
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  sessionCartId: z.string().min(1, 'O ID do carrinho da sessão é obrigatório.'),
+  userId: z.string().optional().nullable(),
+})
