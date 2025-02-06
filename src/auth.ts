@@ -63,13 +63,35 @@ export const config = {
       token: JWT
     }) {
       if (session.user) {
-        session.user.id = token.sub || ''
+        session.user.id = token.sub
+
+        if (typeof token.role === 'string') {
+          session.user.role = token.role
+        }
+
+        session.user.name = token.name
 
         if (trigger === 'update') {
           session.user.name = token.name
         }
       }
       return session
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.role = user.role
+
+        if (user.name === 'NO_NAME') {
+          token.name = user.email!.split('@')[0]
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          })
+        }
+      }
+      return token
     },
   },
 } satisfies NextAuthConfig
