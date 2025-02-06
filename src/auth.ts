@@ -1,5 +1,7 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { compareSync } from 'bcrypt-ts-edge'
+// import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 import type { NextAuthConfig, Session } from 'next-auth'
 import NextAuth from 'next-auth'
 import { JWT } from 'next-auth/jwt'
@@ -92,6 +94,24 @@ export const config = {
         }
       }
       return token
+    },
+    authorized({ request }) {
+      if (!request.cookies.get('sessionCartId')) {
+        const sessionCartId = crypto.randomUUID()
+        const newRequestHeaders = new Headers(request.headers)
+
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        })
+
+        response.cookies.set('sessionCartId', sessionCartId)
+
+        return response
+      } else {
+        return true
+      }
     },
   },
 } satisfies NextAuthConfig
