@@ -25,6 +25,7 @@ export default function Providers({
           classNames: {
             error: '!bg-rose-500 !border-rose-500 !text-white',
             success: '!bg-store !border-store !text-white',
+            actionButton: '!bg-white !border-white !text-store',
           },
         }}
       />

@@ -1,7 +1,7 @@
 'use client'
 
 import { Plus } from 'lucide-react'
-//import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import { addItemToCart } from '@/lib/actions/cart.actions'
 import { CartItemProps } from '@/types'
 
 export function AddToCart({ item }: CartItemProps) {
-  //const router = useRouter()
+  const router = useRouter()
 
   async function handleAddToCart() {
     const response = await addItemToCart({ item })
@@ -20,7 +20,12 @@ export function AddToCart({ item }: CartItemProps) {
       return
     }
 
-    toast.success(response.message)
+    toast.success(response.message, {
+      action: {
+        label: 'Ir para o carrinho',
+        onClick: () => router.push('/cart'),
+      },
+    })
   }
 
   return (
