@@ -2,12 +2,12 @@ import { z } from 'zod'
 
 import { formatNumberWithDecimal } from './utils'
 
-const currency = z
-  .string()
-  .refine(
-    (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
-    'O preço deve ter exatamente casas decimais',
+const currency = z.string().refine((value) => {
+  const formattedValue = formatNumberWithDecimal(
+    Number(value.replace(',', '.')),
   )
+  return /^\d+,\d{2}$/.test(formattedValue)
+}, 'O preço deve ter exatamente duas casas decimais (ex: 59,99)')
 
 // Schema for inserting products
 export const insertProductSchema = z.object({
