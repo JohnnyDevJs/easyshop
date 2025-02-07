@@ -19,7 +19,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { signInWithCredentials } from '@/lib/actions/user.actions'
+import { signInDefaultValues } from '@/config/auth-config'
+import { signInUser } from '@/lib/actions/user.actions'
 import { signInFormSchema } from '@/lib/validators'
 
 type SignInFormData = z.infer<typeof signInFormSchema>
@@ -33,11 +34,14 @@ export function SignInForm() {
 
   const signInValuesFromParams = {
     email: emailFromParams,
+    password: '',
   }
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInFormSchema),
-    defaultValues: signInValuesFromParams,
+    defaultValues: emailFromParams
+      ? signInValuesFromParams
+      : signInDefaultValues,
   })
 
   const {
@@ -48,16 +52,16 @@ export function SignInForm() {
 
   async function handleSignIn(data: SignInFormData) {
     try {
-      const response = await signInWithCredentials(data)
+      const response = await signInUser(data)
 
-      if (response?.error) {
-        toast.error(response.error)
+      if (!response.success) {
+        toast.error(response.message)
         return
       }
 
       router.push('/')
     } catch (error) {
-      toast.error('Ocorreu um erro ao tentar fazer login.')
+      toast.error('Erro ao tentar fazer login')
       console.error(error)
     }
   }

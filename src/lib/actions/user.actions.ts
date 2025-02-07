@@ -12,39 +12,47 @@ import { signInFormSchema, signUpFormSchema } from '@/lib/validators'
 type SignInFormFields = z.infer<typeof signInFormSchema>
 type SignUpFormFields = z.infer<typeof signUpFormSchema>
 
-export async function signInWithCredentials(formData: SignInFormFields) {
-  const validatedFields = signInFormSchema.safeParse(formData)
+export async function signInUser(data: SignInFormFields) {
+  const validatedFields = signInFormSchema.safeParse(data)
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields.' }
+    return { success: false, message: 'Invalid fields' }
   }
 
   const { email, password } = validatedFields.data
   const existingUser = await getUserByEmail(email)
 
   if (!existingUser || !existingUser.email) {
-    return { error: 'Este e-mail não está cadastrado.' }
+    return { success: false, message: 'Este e-mail não está cadastrado' }
   }
 
   try {
     await signIn('credentials', {
       email,
       password,
+      redirect: false,
     })
+
+    return { success: true, message: 'Certo' }
   } catch (error) {
+    console.log('ERROR', error)
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
           return {
-            error: 'Credenciais inválidas.',
+            success: false,
+            message: 'Credenciais inválidas',
           }
 
         default:
           return {
-            error: 'Algo deu errado.',
+            success: false,
+            message: 'Algo deu errado',
           }
       }
     }
+
+    return { success: false, message: 'Erro inesperado ao tentar fazer login' }
   }
 }
 

@@ -43,7 +43,7 @@ export function SignUpForm() {
     try {
       const response = await signUpUser(data)
 
-      if (!response?.success) {
+      if (!response.success) {
         toast.error(response.message)
         return
       }

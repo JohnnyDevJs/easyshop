@@ -32,7 +32,7 @@ export async function UserButton() {
           <div className="flex items-center">
             <Button
               variant="ghost"
-              className="relative ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-200"
+              className="relative ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-muted"
             >
               {getInitials(session.user?.name)}
             </Button>
