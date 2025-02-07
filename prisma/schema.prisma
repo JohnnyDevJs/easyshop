@@ -8,11 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
 model Product {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
@@ -33,6 +28,22 @@ model Product {
   @@map("products")
 }
 
+model Cart {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String?  @map("user_id") @db.Uuid
+  sessionCartId String   @map("session_cart_id")
+  items         Json[]   @default([]) @db.Json
+  itemsPrice    Decimal  @map("items_price") @db.Decimal(12, 2)
+  totalPrice    Decimal  @map("total_price") @db.Decimal(12, 2)
+  shippingPrice Decimal  @map("shipping_price") @db.Decimal(12, 2)
+  taxPrice      Decimal  @map("tax_price") @db.Decimal(12, 2)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("carts")
+}
+
 model User {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name          String    @default("NO_NAME")
@@ -40,33 +51,33 @@ model User {
   password      String?
   emailVerified DateTime? @map("email_verified")
   image         String?
-  role          Role      @default(USER)
   address       Json?     @db.Json
   paymentMethod String?   @map("payment_method")
   createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt     DateTime  @updatedAt @map("updated_at")
+  role          Role      @default(USER)
   account       Account[]
-  session       Session[]
   cart          Cart[]
+  session       Session[]
 
   @@map("users")
 }
 
 model Account {
   userId            String   @map("user_id") @db.Uuid
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              String
   provider          String
   providerAccountId String   @map("provider_account_id")
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?  @db.Text
+  id_token          String?
   session_state     String?
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt         DateTime @updatedAt @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -76,9 +87,9 @@ model Session {
   sessionToken String   @id @map("session_token")
   userId       String   @map("user_id") @db.Uuid
   expires      DateTime @db.Timestamp(6)
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -92,18 +103,7 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Cart {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId        String?  @map("user_id") @db.Uuid
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessionCartId String   @map("session_cart_id")
-  items         Json[]   @default([]) @db.Json
-  itemsPrice    Decimal  @map("items_price") @db.Decimal(12, 2)
-  totalPrice    Decimal  @map("total_price") @db.Decimal(12, 2)
-  shippingPrice Decimal  @map("shipping_price") @db.Decimal(12, 2)
-  taxPrice      Decimal  @map("tax_price") @db.Decimal(12, 2)
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime @updatedAt @map("updated_at")
-
-  @@map("carts")
+enum Role {
+  ADMIN
+  USER
 }

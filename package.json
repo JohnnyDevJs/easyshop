@@ -12,6 +12,7 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:pull": "prisma db pull",
     "db:studio": "prisma studio",
     "db:seed": "tsx ./src/db/seed"
   },
